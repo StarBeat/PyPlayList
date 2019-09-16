@@ -1,12 +1,11 @@
 from datetime import timedelta
 
 class IBaseList(object):
-    def __init__(self, path :str = None, file_name :str  = None, entities :list  = None):
-        self.path :str = path
+    def __init__(self, entities :list  = None, file_name :str  = ""):#py 的默认参数只初始化一次，后续默认参数指向相同对象
         self.file_name :str = file_name
-        self.entities :list = entities
+        self.entities :list = entities if None else list()
     class Entity():
-        def __init(self, path :str = None):
+        def __init(self, path :str):
             self.path :str = path
 
     def GetTracksPaths(self):
@@ -15,32 +14,41 @@ class IBaseList(object):
             paths.append(self.Entity(i).path)
         return paths
 
+class BaseList(object):
+    def __init__(self, path :str = ""):
+        self.path :str = path
+
 class M3u(IBaseList):
-    def __init__(self, is_extened :bool = False):
+    def __init__(self, is_extened :bool = False, file_name :str  = ""):
+        super(M3u, self).__init__(file_name)
         self.is_extened :bool = is_extened
     is_extened :bool
-    class M3uBase:
-        def __init__(self, title :str = None, album :str = None, album_artist :str = None, duration :timedelta = None):
+    class M3uBase(BaseList):
+        def __init__(self, title :str = "", album :str = "", album_artist :str = "", duration :timedelta = timedelta(milliseconds = 0), path :str = ""):
+            super().__init__(path)
             self.title :str = title
             self.album :str = album
             self.album_artist :str = album_artist
             self.duration :timedelta = duration
 
 class Pls(IBaseList):
-    def __init__(self, version :int = None):
+    def __init__(self, version :int = -1, file_name :str  = ""):
+        super(Pls, self).__init__(file_name)
         self.version :int = 2
-    class  PlsBase:
-        def __init(self, title :str = None, length :timedelta = None, nr :int = None):
-            self.title :str
-            self.length :timedelta
-            self.nr :int
+    class  PlsBase(BaseList):
+        def __init__(self, title :str = "", length :timedelta = timedelta(milliseconds = 0), nr :int = 0, path :str = ""):
+            super().__init__(path)
+            self.title :str = title
+            self.length :timedelta = length
+            self.nr :int = nr
 
     def GetNums(self):
         return len(self.entities)
 
 class Wpl(IBaseList):
-    def __init__(self, author :str = None, generator :str = None, 
-                 guid :str = None, item_count :int = None, title :str = None, total_duration:timedelta = None):
+    def __init__(self, author :str = "", generator :str = "", 
+                 guid :str = "", item_count :int = -1, title :str = "", total_duration:timedelta = timedelta(milliseconds = 0), file_name :str  = ""):
+        super(Wpl, self).__init__(file_name)
         self.author :str = author
         self.generator :str =generator
         self.guid :str = guid
@@ -48,9 +56,10 @@ class Wpl(IBaseList):
         self.title :str = title
         self.total_duration:timedelta =total_duration
 
-    class WplBase:
-        def __init__(self, album_title :str = None, album_artist :str = None, 
-                     duration :timedelta = None, track_title :str = None, track_artist :str = None):
+    class WplBase(BaseList):
+        def __init__(self, album_title :str = "", album_artist :str = "", 
+                     duration :timedelta = None, track_title :str = "", track_artist :str = "", path :str = ""):
+            super().__init__(path)
             self.album_title :str = album_title
             self.album_artist :str = album_artist
             self.duration :timedelta = duration
@@ -59,8 +68,9 @@ class Wpl(IBaseList):
 
 
 class Zpl(IBaseList):
-    def __init__(self, author :str = None, generator :str = None, 
-                 guid :str = None, item_count :int = None, title :str = None, total_duration:timedelta = None):
+    def __init__(self, author :str = "", generator :str = "", 
+                 guid :str = "", item_count :int = -1, title :str = "", total_duration:timedelta = timedelta(milliseconds = 0), file_name :str  = ""):
+        super(Zpl, self).__init__(file_name)
         self.author :str = author
         self.generator :str =generator
         self.guid :str = guid
@@ -68,9 +78,10 @@ class Zpl(IBaseList):
         self.title :str = title
         self.total_duration:timedelta =total_duration
 
-    class ZplBase:
-        def __init__(self, album_title :str = None, album_artist :str = None, 
-                     duration :timedelta = None, track_title :str = None, track_artist :str = None):
+    class ZplBase(BaseList):
+        def __init__(self, album_title :str = "", album_artist :str = "", 
+                     duration :timedelta = None, track_title :str = "", track_artist :str = "", path :str = ""):
+            super().__init__(path)
             self.album_title :str = album_title
             self.album_artist :str = album_artist
             self.duration :timedelta = duration
